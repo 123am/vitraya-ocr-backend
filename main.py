@@ -16,6 +16,6 @@ CORS(app)
 load_dotenv()
 
 if(os.environ.get("SECRET")):
-    app.run(debug=True)
+    app.run(debug=True,port=5100)
 else:
     print("Please Create .env file")
