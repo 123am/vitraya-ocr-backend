@@ -29,10 +29,14 @@ def addContent(current_user):
     json_data=cutils.form_to_json(req_form)
     
     txt=[]
+    teq=""
     for detection in result:
         print(detection)
         txt.append(detection[1].strip())
+        teq=teq+detection[1].strip()+" "
     json_data["txt"]="<br/>".join(txt)
+    json_data["tee"]=teq
+    
 
     with open(full_path, "rb") as f:
         encoded_image = base64.b64encode(f.read())
@@ -160,10 +164,15 @@ def subFromCart(current_user):
 
 
 @publisher.route("/listContent",methods=["GET"])
-def listContent():
+@token_auth_check
+def listContent(current_user):
 
     aggr=[
         {
+            '$match': {
+                'userId': current_user["uniqueId"]
+            }
+        },{
             '$addFields': {
                 'uniqueId': {
                     '$toString':"$_id"
